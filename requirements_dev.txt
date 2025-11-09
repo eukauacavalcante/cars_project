@@ -1,1 +1,6 @@
-flake8==7.1.0
+django-browser-reload==1.21.0
+cookiecutter==2.6.0
+isort==7.0.0
+colorama==0.4.6
+rich==14.2.0
+arrow==1.4.0
