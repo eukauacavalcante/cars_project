@@ -1,0 +1,54 @@
+{% extends 'auth_base.html' %}
+
+{% load static %}
+
+{% block auth_title %}Entre com a sua conta{% endblock %}
+
+{% block auth_subtitle %}Aproveite o máximo de funções do nosso sistema{% endblock %}
+
+{% block auth_form %}
+<div class="flex flex-col md:flex-row w-full gap-6 md:gap-8">
+
+    <div class="w-full md:w-1/2 flex flex-col justify-center">
+        <form method="post" class="flex flex-col">
+            {% csrf_token %}
+            <div class="flex flex-col gap-2 mb-2">
+                <label class="form-label">Nome de usuário</label>
+                {{login_form.username.errors}}
+                <input type="text" 
+                       name="username"
+                       class="input-global"
+                       placeholder="Digite seu nome de usuário">
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="form-label">Senha</label>
+                {{login_form.password.errors}}
+                <input type="password"
+                       name="password"
+                       class="input-global"
+                       placeholder="Digite sua senha">
+            </div>
+
+            <div class="flex flex-col gap-5 text-center m-5">
+                <button type="submit" class="btn-primary">
+                    Entrar
+                </button>
+                <a href="{% url 'register' %}" class="links-auth">
+                    Ou crie sua conta
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="hidden md:flex w-full md:w-1/2 items-center justify-center p-4 md:p-6">
+        <div class="relative w-full max-w-md">
+            <div class="absolute inset-0 bg-gradient-to-t from-indigo-700 to-blue-500 rounded-2xl opacity-10 blur-xl"></div>
+            <img src="{% static 'img/login.svg' %}" 
+                    alt="Um homem e uma mulher se cumprimentando"
+                    class="relative w-full h-auto object-contain drop-shadow-lg">
+        </div>
+    </div>
+
+</div>
+{% endblock %}

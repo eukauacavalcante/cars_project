@@ -1,53 +1,23 @@
-{% load static %}
-
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Concessionária </title>
-  <link rel="stylesheet" href="{% static 'css/base_styles/base.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CarStore{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  
+    {% load static tailwind_tags %}
+    {% tailwind_css %}
+    
 </head>
-<body>
-  <header>
-    <div class="header_title">
-        <h1 class="title">Concessionária</h1>
-        <p>Compre seu carro aqui</p>
-    </div>      
-    <nav>
-      <ul>
-        {% if user.is_authenticated %}
-          <li>Olá, {{user.username}}</li>|
-        {% endif %}
-        {% if not user.is_authenticated %}
-          <li>
-            <a href="{% url 'register' %}">Cadastre-se</a>
-          </li>
-          <li><a href="{% url 'login' %}">Entrar</a></li>
-        {% endif %}
+<body class="bg-white min-h-screen flex flex-col overflow-x-hidden">
+  {% include 'components/_header.html' %}
 
-        <li><a href="{% url 'cars_list' %}">Carros</a></li>
+  <main class="text-black">
+    {% block content %}
+    {% endblock %}
+  </main>
 
-        {% if user.is_authenticated %}
-          <li><a href="{% url 'new_cars_list' %}">Cadastrar carro</a></li>
-        {% endif %}
-
-        {% if user.is_authenticated %}
-          <li><a href="{% url 'logout' %}">Sair</a></li>
-        {% endif %}
-      </ul>
-    </nav>
-  </header>
-
-  <div class="container">
-    <main>
-      {% block content %}
-      {% endblock %}
-    </main>
-  </div>
-
-  <footer>
-    <p>&copy; 2024 Concessionária Multimarcas</p>
-  </footer>
+  {% include 'components/_footer.html' %}
 </body>
 </html>

@@ -1,0 +1,59 @@
+<nav class="bg-white shadow-md">
+    <div class="container-main">
+        <div class="flex justify-between items-center py-4">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="flex items-center space-x-2">
+                <i class="bi bi-car-front-fill text-3xl text-auto-primary"></i>
+                <span class="text-xl font-bold text-auto-secondary">CarStore</span>
+            </a>
+
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="{% url 'home' %}" class="nav-link">Home</a>
+                <a href="{% url 'cars' %}" class="nav-link">Veículos</a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'new_car' %}" class="nav-link">Novo Veículo</a>
+                    <div class="relative ml-3">
+                        <div class="dropdown dropdown-end">
+                            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                                <div class="w-10 rounded-full">
+                                    <i class="bi bi-person-circle text-2xl"></i>
+                                </div>
+                            </label>
+                            <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                                <li><a href="#" class="justify-between">Perfil</a></li>
+                                <li><a href="#" class="justify-between">Meus Veículos</a></li>
+                                <li><a href="{% url 'logout' %}">Sair</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-outline">Login</a>
+                    <a href="{% url 'register' %}" class="btn-primary">Cadastrar</a>
+                {% endif %}
+            </div>
+
+            <!-- Menu Mobile -->
+            <div class="md:hidden">
+                <button class="mobile-menu-button p-2 rounded-md hover:bg-gray-100">
+                    <i class="bi bi-list text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Dropdown -->
+        <div class="mobile-menu hidden md:hidden py-4">
+            <a href="{% url 'home' %}" class="block py-2 px-4 text-sm hover:bg-gray-50">Home</a>
+            <a href="{% url 'cars' %}" class="block py-2 px-4 text-sm hover:bg-gray-50">Veículos</a>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'new_car' %}" class="block py-2 px-4 text-sm hover:bg-gray-50">Novo Veículo</a>
+                <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-50">Perfil</a>
+                <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-50">Meus Veículos</a>
+                <a href="{% url 'logout' %}" class="block py-2 px-4 text-sm hover:bg-gray-50">Sair</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="block py-2 px-4 text-sm hover:bg-gray-50">Login</a>
+                <a href="{% url 'register' %}" class="block py-2 px-4 text-sm hover:bg-gray-50">Cadastrar</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

@@ -1,33 +1,78 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends 'base.html' %}
 
 {% block content %}
-  <link rel="stylesheet" href="{% static 'css/cars_styles/cars.css' %}">
-
-  <body>
-    <form method="GET" action="{% url 'cars_list' %}">
-      <input type="text" name="search" placeholder="Buscar carro por modelo...">
-      <button type="submit">Buscar</button>
-    </form>
-
-    <div class="car-grid">
-      {% if cars %}
-        {% for car in cars %}
-          <a href="{% url 'car_detail' car.pk %}">
-            <div class="car-card">
-              {% if car.photo %}
-                  <img src="{{ car.photo.url }}" alt="{{ car.model }} - {{ car.brand }}">
-              {% else %}
-                <p>Foto não disponível</p>
-              {% endif %}
-              <h2>{{ car.brand }} {{ car.model }}</h2>
-              <p>{{ car.factory_year }} - R$ {{ car.value | floatformat:"2g" }}</p>
-            </div>
-          </a>
-        {% endfor %}
-      {% else %}
-        <p class="no-results">Nenhum carro encontrado.</p>
-      {% endif %}
+    <!-- Header da Página -->
+    <div class="text-center m-5">
+        <div class="container-main">
+            <h1 class="text-2xl md:text-3xl font-semibold">Veículos Disponíveis</h1>
+            <p class="text-sm md:text-lg text-black/60">Encontre o carro dos seus sonhos entre nossas ofertas</p>
+        </div>
     </div>
-  </body>
+
+    <div class="text-center flex flex-col justify-center items-center">
+        <!-- Seção de Filtros -->
+        <div class="w-full max-w-2xl px-4">
+            <form method="GET" class="flex flex-row gap-5 justify-center mt-5" action="{% url 'cars_list' %}">
+                <div class="flex flex-row gap-5 justify-center items-center">
+                    <span class="hidden sm:flex">Buscar Veículos</span>
+                    <input type="text" name="search" placeholder="Ex: Civic, Corolla..." class="border-1 border-black/10 p-2">
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="bi bi-search mr-2"></i>
+                    Buscar
+                </button>
+            </form>
+        </div>
+
+        <!-- Grid de Veículos -->
+        <div class="flex flex-wrap gap-10 justify-center m-15 w-full">
+            {% if cars %}
+                {% for car in cars %}
+                    <div class="card bg-white w-full max-w-sm shadow-xl hover:shadow-3xl md:hover:scale-105 transition-all duration-400">
+                        <figure class="relative h-48 overflow-hidden">
+                            {% if car.photo %}
+                                <img src="{{ car.photo.url }}" 
+                                alt="{{ car.brand }} {{ car.model }}" 
+                                class="w-full h-full object-cover">
+                            {% else %}
+                                <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                                    <i class="bi bi-camera text-6xl text-gray-400"></i>
+                                </div>
+                            {% endif %}
+                        </figure>
+            
+                        <div class="card-body p-4 md:p-6">
+                            <h2 class="card-title text-lg md:text-xl font-bold">
+                                {{ car.brand }} {{ car.model }}
+                            </h2>
+                            
+                            <div class="flex flex-col gap-3 my-2 items-start">
+                                <span class="text-2xl md:text-3xl font-bold text-primary">
+                                    R$ {{ car.value|floatformat:"2g" }}
+                                </span>
+                                
+                                <p class="text-sm md:text-base text-gray-600">
+                                    <span class="font-semibold">Ano:</span> 
+                                    <span class="font-normal">{{ car.factory_year|default:"Indisponível" }}</span>
+                                </p>
+                            </div>
+                            
+                            <div class="card-actions justify-end mt-4">
+                                <a href="{% url 'car_detail' car.pk %}" 
+                                class="btn-primary">
+                                    Ver detalhes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="flex flex-col gap-3 text-center py-12">
+                    <i class="bi bi-emoji-frown text-yellow-500 text-6xl text-auto-neutral"></i>
+                    <h3 class="text-xl font-bold text-auto-secondary">Nenhum veículo encontrado</h3>
+                    <p class="text-sm md:text-lg text-black/60">Tente ajustar sua busca ou volte mais tarde.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

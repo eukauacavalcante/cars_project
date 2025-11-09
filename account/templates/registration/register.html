@@ -1,0 +1,69 @@
+{% extends 'auth_base.html' %}
+
+{% load static %}
+                    
+{% block auth_title %}Crie a sua conta{% endblock %}
+
+{% block auth_subtitle %}Se registre e tenha acesso a diversas ações do nosso sistema{% endblock %}
+
+{% block auth_form %}
+    <div class="flex flex-col md:flex-row w-full gap-6 md:gap-8">
+
+        <div class="w-full md:w-1/2 flex flex-col justify-center">
+            <form method="post" class="flex flex-col">
+                {% csrf_token %}
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Defina seu nome de usuário</label>
+                    {% if user_form.username.errors %}
+                        <div class="form-error">{{user_form.username.errors}}</div>
+                    {% endif %}
+                    <input type="text" 
+                           name="username" 
+                           class="input-global"
+                           placeholder="Digite seu nome de usuário">
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Crie uma senha</label>
+                    {% if user_form.password1.errors %}
+                        <div class="form-error">{{user_form.password1.errors}}</div>
+                    {% endif %}
+                    <input type="password" 
+                           name="password1" 
+                           class="input-global"
+                           placeholder="Digite sua senha">
+                </div>
+
+                <div class="form-group mb-6">
+                    <label class="form-label">Confirme a senha</label>
+                    {% if user_form.password2.errors %}
+                        <div class="form-error">{{user_form.password2.errors}}</div>
+                    {% endif %}
+                    <input type="password" 
+                           name="password2" 
+                           class="input-global"
+                           placeholder="Confirme sua senha">
+                </div>
+
+                <div class="flex flex-col gap-4 text-center mt-2">
+                    <button type="submit" class="btn-primary w-full">
+                        Concluir Cadastro
+                    </button>
+                    <a href="{% url 'login' %}" class="links-auth">
+                        Ou entre na sua conta
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="hidden md:flex w-full md:w-1/2 items-center justify-center p-4 md:p-6">
+            <div class="relative w-full max-w-md">
+                <div class="absolute inset-0 bg-gradient-to-t from-indigo-700 to-blue-500 rounded-2xl opacity-10 blur-xl"></div>
+                <img src="{% static 'img/register.svg' %}" 
+                     alt="Um homem e uma mulher se cumprimentando"
+                     class="relative w-full h-auto object-contain drop-shadow-lg">
+            </div>
+        </div>
+    </div>
+{% endblock %}

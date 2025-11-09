@@ -1,24 +1,62 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends 'base.html' %}
+
+{% block title %}Deletar Veículo{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/cars_styles/car_delete.css' %}">
-  <form method="post">
-    {% csrf_token %}
-    <h1>Deletar Carro</h1>
-    <p class="message">Você tem certeza que deseja deletar o {{object.brand}} {{object.model}}?</p>
-    {% if car.photo %}
-    <div class="photo-div">
-      <img src="{{ object.photo.url }}" alt="{{ object.model }} - {{ object.brand }}">
+    <div class="breadcrumb-container">
+        <a href="{% url 'cars_list' %}">
+            <i class="bi bi-house-door mr-1"></i>
+            Veículos
+        </a>
+        <i class="bi bi-chevron-right text-gray-400 mx-2"></i>
+        <span class="text-auto-primary">{{ object.brand }} {{ object.model }}</span>
+        <i class="bi bi-chevron-right text-gray-400 mx-2"></i>
+        <span class="text-auto-primary">Deletar Veículo</span>
     </div>
-    {% else %}
-      <p>Foto não disponível</p>
-    {% endif %}
-    <div>
-      <div class="buttons-container">
-        <input type="submit" value="Deletar" class="btn btn-danger">
-        <a href="{% url 'cars_list' %}" class="btn btn-secondary">Cancelar</a>
-      </div>
+
+    <div class="page-header">
+            <div class="container-main">
+                <h1 class="page-header-title">Deletar {{object.brand}} {{ object.model }}?</h1>
+            </div>
     </div>
-  </form>
+
+    <div class="flex justify-center items-center w-full mb-10">
+        <div class="car-card">
+            <figure class="relative h-66">
+                {% if object.photo %}
+                    <img src="{{ object.photo.url }}" 
+                        alt="{{ object.model }} - {{ object.brand }}"
+                        class="w-full h-full object-cover">
+                {% else %}
+                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <i class="bi bi-camera text-6xl text-gray-400"></i>
+                    </div>
+                {% endif %}
+            </figure>
+            <div class="card-body">
+                <div class="text-center mb-8">
+                    <i class="bi bi-exclamation-triangle text-warning text-5xl mb-4"></i>
+                    <h2 class="text-2xl font-bold text-auto-secondary mb-2">Confirmar Exclusão</h2>
+                    <p class="text-auto-neutral">
+                        Você tem certeza que deseja deletar o veículo 
+                        <span class="font-semibold text-auto-secondary">{{object.brand}} {{object.model}}</span>?
+                    </p>
+                    <p class="text-sm text-auto-accent mt-2">
+                        Esta ação não pode ser desfeita.
+                    </p>
+                </div>
+            </div>
+            <form method="post" class="btn-container pb-5">
+                {% csrf_token %}
+                <button type="submit" class="btn-error">
+                    <i class="bi bi-trash mr-2"></i>
+                    Confirmar Exclusão
+                </button>
+                <a href="{% url 'car_detail' pk=object.pk %}" class="btn-primary">
+                    <i class="bi bi-arrow-left mr-2"></i>
+                    Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
 {% endblock %}

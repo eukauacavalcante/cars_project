@@ -1,33 +1,74 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends 'base.html' %}
+
+{% block title %}{{ object.brand }} {{ object.model }}{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/cars_styles/car_detail.css' %}">
+    <div class="mb-10">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-container">
+            <a href="{% url 'cars_list' %}">
+                <i class="bi bi-house-door mr-1"></i>
+                Veículos
+            </a>
+            <i class="bi bi-chevron-right text-gray-400 mx-2"></i>
+            <span class="text-auto-primary">{{ object.brand }} {{ object.model }}</span>
+        </div>
 
-  <div class="car-card">
-    {% if car.photo %}
-      <img src="{{ object.photo.url }}" alt="{{ object.model }} - {{ object.brand }}">
-    {% else %}
-      <p>Foto não disponível</p>
-    {% endif %}
-    <div class="dados">
-      <h2 id="car-name">{{ object.brand }} {{ object.model }}</h2>
-      <p><strong>Ano de fabricação:</strong> {{ object.factory_year }}</p>
-      <p><strong>Ano do modelo:</strong> {{ object.model_year }}</p>
-      <p><strong>Placa:</strong> {{ object.plate }}</p>
-      <p><strong>Preço:</strong> R$ {{ object.value | floatformat:"2g" }}</p>
-      {% if object.description %}
-        <p><strong>Descrição:</strong> {{ object.description }}</p>
-      {% endif %}
+        <!-- Informações do Veículo -->
+        <div class="flex justify-center items-center w-full">
+            <div class="car-card">
+                <figure class="relative h-66">
+                    {% if object.photo %}
+                        <img src="{{ object.photo.url }}" 
+                            alt="{{ object.model }} - {{ object.brand }}"
+                            class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                            <i class="bi bi-camera text-6xl text-gray-400"></i>
+                        </div>
+                    {% endif %}
+                </figure>
+                <div class="card-body">
+                    <h2 class="card-title text-xl">{{ object.brand }} {{ object.model }}</h2>
+                    <span class="flex items-center text-lg md:text-xl">
+                        <i class="bi bi-calendar3 mr-2"></i>
+                        {{ object.factory_year|default:"Indisponível" }}/{{ object.model_year|default:"Indisponível" }}
+                    </span>
+                    <span class="flex items-center text-lg md:text-xll">
+                        <i class="bi bi-upc mr-2"></i>
+                        {{ object.plate|default:"Indisponível" }}
+                    </span>
+                    <div class="mt-2 md:mt-4 lg:mt-0">
+                        <span class="text-3xl md:text-4xl font-bold text-auto-primary">
+                            R$ {{ object.value|floatformat:"2g" }}
+                        </span>
+                    </div>
+                    {% if object.description %}
+                        <div class="mb-4 md:mb-8">
+                            <h2 class="text-lg md:text-xl font-semibold text-auto-secondary mb-4">Descrição</h2>
+                            <p class="text-xl leading-relaxed">
+                                {{ object.description }}
+                            </p>
+                        </div>
+                    {% endif %}
+                    <div class="btn-container">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'car_update' pk=object.pk %}" class="btn-primary">
+                                <i class="bi bi-pencil mr-2"></i>
+                                Editar
+                            </a>
+                            <a href="{% url 'car_delete' pk=object.pk %}" class="btn-error">
+                                <i class="bi bi-trash mr-2"></i>
+                                Deletar
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'cars_list' %}" class="btn-primary">
+                            <i class="bi bi-arrow-left mr-2"></i>
+                            Voltar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="buttons-container">
-    {% if user.is_authenticated %}
-      <a href="{% url 'car_update' pk=object.pk %}" class="btn btn-primary">Editar</a>
-    {% endif %}
-    <a href="{% url 'cars_list' %}" class="btn btn-tertiary">Voltar</a>
-    {% if user.is_authenticated %}
-      <a href="{% url 'car_delete' pk=object.pk %}" class="btn btn-danger">Deletar</a>
-    {% endif %}
-  </div>
 {% endblock %}

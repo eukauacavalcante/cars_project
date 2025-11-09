@@ -1,20 +1,153 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends 'base.html' %}
+
+{% block title %}Editar Veículo{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/cars_styles/car_update.css' %}">
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <h1>Editar Carro</h1>
-    <table>
-      {{ form.as_table }}
-    </table>
-    <div>
-      <div class="buttons-container">
-        <input type="submit" value="Salvar Alterações" class="btn btn-primary">
-        <a href="{% url 'car_delete' pk=object.pk%}" class="btn btn-danger">Deletar</a>
-        <a href="{% url 'cars_list' %}" class="btn btn-secondary">Cancelar</a>
-      </div>
+    <div class="breadcrumb-container">
+        <a href="{% url 'cars_list' %}">
+            <i class="bi bi-house-door mr-1"></i>
+            Veículos
+        </a>
+        <i class="bi bi-chevron-right text-gray-400 mx-2"></i>
+        <span class="text-auto-primary">{{ object.brand }} {{ object.model }}</span>
+        <i class="bi bi-chevron-right text-gray-400 mx-2"></i>
+        <span class="text-auto-primary">Editar Veículo</span>
     </div>
-  </form>
+
+    <div class="page-header">
+        <div class="container-main">
+            <h1 class="page-header-title">Editar Veículo</h1>
+            <p class="page-header-subtitle">Atualize as informações do veículo</p>
+        </div>
+    </div>
+
+    <div class="flex justify-center items-center w-full mb-10">
+        <div class="car-card md:max-w-300 p-8">
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Grid de 2 colunas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Coluna Esquerda -->
+                    <div class="space-y-6">
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.model.id_for_label }}">
+                                <i class="bi bi-car-front mr-2"></i>Modelo
+                            </label>
+                            {{ form.model }}
+                            {% if form.model.errors %}
+                                <div class="form-error">{{ form.model.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.brand.id_for_label }}">
+                                <i class="bi bi-tag mr-2"></i>Marca
+                            </label>
+                            {{ form.brand }}
+                            {% if form.brand.errors %}
+                                <div class="form-error">{{ form.brand.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.factory_year.id_for_label }}">
+                                <i class="bi bi-calendar3 mr-2"></i>Ano de Fabricação
+                            </label>
+                            {{ form.factory_year }}
+                            {% if form.factory_year.errors %}
+                                <div class="form-error">{{ form.factory_year.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.plate.id_for_label }}">
+                                <i class="bi bi-upc mr-2"></i>Placa
+                            </label>
+                            {{ form.plate }}
+                            {% if form.plate.errors %}
+                                <div class="form-error">{{ form.plate.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.color.id_for_label }}">
+                                <i class="bi bi-palette mr-2"></i>Cor do Veículo
+                            </label>
+                            {{ form.color }}
+                            {% if form.color.errors %}
+                                <div class="form-error">{{ form.color.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Coluna Direita -->
+                    <div class="space-y-6">
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.model_year.id_for_label }}">
+                                <i class="bi bi-calendar-check mr-2"></i>Ano do Modelo
+                            </label>
+                            {{ form.model_year }}
+                            {% if form.model_year.errors %}
+                                <div class="form-error">{{ form.model_year.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.value.id_for_label }}">
+                                <i class="bi bi-currency-dollar mr-2"></i>Valor
+                            </label>
+                            {{ form.value }}
+                            {% if form.value.errors %}
+                                <div class="form-error">{{ form.value.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.photo.id_for_label }}">
+                                <i class="bi bi-camera mr-2"></i>Foto do Veículo
+                            </label>
+                            {% if object.photo %}
+                                <div class="mb-2">
+                                    <img src="{{ object.photo.url }}" 
+                                         alt="Foto atual" 
+                                         class="car-image-thumbnail">
+                                </div>
+                            {% endif %}
+                            {{ form.photo }}
+                            {% if form.photo.errors %}
+                                <div class="form-error">{{ form.photo.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Descrição (Largura Total) -->
+                <div class="form-group col-span-full">
+                    <label class="form-label" for="{{ form.description.id_for_label }}">
+                        <i class="bi bi-text-paragraph mr-2"></i>Descrição
+                    </label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="form-error">{{ form.description.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="btn-container">
+                    <button type="submit" class="btn-success">
+                        <i class="bi bi-check-lg mr-2"></i>
+                        Salvar Alterações
+                    </button>
+                    <a href="{% url 'car_delete' pk=object.pk %}" class="btn-error">
+                        <i class="bi bi-trash mr-2"></i>
+                        Deletar
+                    </a>
+                    <a href="{% url 'car_detail' pk=object.pk %}" class="btn-primary">
+                        <i class="bi bi-arrow-left mr-2"></i>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}
