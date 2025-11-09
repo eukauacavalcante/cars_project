@@ -1,9 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.urls import reverse_lazy
-from cars.models import Car
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView)
+
 from cars.forms import CarModelForm
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from cars.models import Car
 
 
 class CarListView(ListView):
@@ -12,10 +14,16 @@ class CarListView(ListView):
     context_object_name = 'cars'
 
     def get_queryset(self):
-        cars = super().get_queryset().order_by('model')
+        cars = super().get_queryset().select_related('brand').order_by('brand__name')
         search = self.request.GET.get('search')
+
         if search:
-            cars = cars.filter(model__icontains=search)
+            cars = cars.filter(
+                Q(model__icontains=search) |
+                Q(brand__name__icontains=search) |
+                Q(plate__icontains=search) |
+                Q(color__icontains=search)
+            ).distinct()
         return cars
 
 
@@ -24,16 +32,14 @@ class CarDetailView(DetailView):
     template_name = 'car_detail.html'
 
 
-@method_decorator(login_required(login_url='login'), name='dispatch')
-class NewCarCreateView(CreateView):
+class NewCarCreateView(CreateView, LoginRequiredMixin):
     model = Car
     form_class = CarModelForm
     template_name = 'new_car.html'
-    success_url = '/cars/'
+    success_url = '/'
 
 
-@method_decorator(login_required(login_url='login'), name='dispatch')
-class CarUpdateView(UpdateView):
+class CarUpdateView(UpdateView, LoginRequiredMixin):
     model = Car
     form_class = CarModelForm
     template_name = 'car_update.html'
@@ -42,8 +48,7 @@ class CarUpdateView(UpdateView):
         return reverse_lazy('car_detail', kwargs={'pk': self.object.pk})
 
 
-@method_decorator(login_required(login_url='login'), name='dispatch')
-class CarDeleteView(DeleteView):
+class CarDeleteView(DeleteView, LoginRequiredMixin):
     model = Car
     template_name = 'car_delete.html'
-    success_url = '/cars/'
+    success_url = '/'
