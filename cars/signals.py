@@ -1,8 +1,11 @@
-from django.db.models.signals import pre_save, post_save, post_delete
 from django.db.models import Sum
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
+from django.conf import settings
+
 from cars.models import Car, CarInventory
-# from gemini_api.client import get_car_descriptionAI
+
+from cars.services.groq_ai import get_ai_description
 
 
 def car_inventory_update():
@@ -16,17 +19,17 @@ def car_inventory_update():
     )
 
 
-@receiver(pre_save, sender=Car)
-def car_pre_save(sender, instance, **kwargs):
+if settings.AI_FUNCTION:
+    @receiver(pre_save, sender=Car)
+    def car_pre_save(sender, instance, **kwargs):
 
-    if not instance.description:
-        instance.description = 'Descrição indisponível'
-
-    # CONFIGURAÇÃO PARA GERAR DESCRIÇÃO POR IA, UTILIZE ESTA ABAIXO.
-
-    # if not instance.description:
-    # ai_description = get_car_descriptionAI(instance.model, instance.brand, instance.model_year)
-    # instance.description = ai_description
+        if not instance.description:
+            ai_description = get_ai_description(
+                instance.model, 
+                instance.brand, 
+                instance.model_year
+            )
+            instance.description = ai_description
 
 
 @receiver(post_save, sender=Car)
